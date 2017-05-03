@@ -53,6 +53,9 @@ var app = {
         });
         console.log('after init');
 
+        var parentElement = document.getElementById('registration');
+        var divMensaje = parentElement.querySelector('.mensaje');
+
         push.on('registration', function(data) {
             console.log('registration event: ' + data.registrationId);
 
@@ -63,12 +66,13 @@ var app = {
                 // Post registrationId to your app server as the value has changed
             }
 
-            var parentElement = document.getElementById('registration');
             var listeningElement = parentElement.querySelector('.waiting');
             var receivedElement = parentElement.querySelector('.received');
 
             listeningElement.setAttribute('style', 'display:none;');
             receivedElement.setAttribute('style', 'display:block;');
+
+            divMensaje.innerHTML = data.registrationId;
         });
 
         push.on('error', function(e) {

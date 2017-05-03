@@ -97,6 +97,10 @@ h1 {
     display:none;
 }
 
+.event.mensaje {
+    background-color:#ff0000;
+}
+
 @keyframes fade {
     from { opacity: 1.0; }
     50% { opacity: 0.4; }
