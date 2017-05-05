@@ -89,11 +89,15 @@ var _config = {
 
             push.on('registration', function(data) {
 
-                var oldRegId = localStorage.getItem('registrationId');
+                self.exitos.push({'mensaje':'RegID: '+data.registrationId});
+
+                localStorage.setItem('registrationId', data.registrationId);
+
+                /*var oldRegId = localStorage.getItem('registrationId');
                 
                 if (oldRegId !== data.registrationId) {
                     localStorage.setItem('registrationId', data.registrationId);
-                }
+                }*/
 
                 navigator.notification.alert(
                     localStorage.getItem('registrationId'),
@@ -101,8 +105,6 @@ var _config = {
                     'Chequeando localStorage!',
                     'Ok'
                 );
-
-                divMensaje.innerHTML = data.registrationId;
             });
 
             push.on('error', function(e) {
@@ -110,6 +112,8 @@ var _config = {
             });
 
             push.on('notification', function(data) {
+
+                notificacionesService.agregar(data.message);
 
                 navigator.notification.alert(
                     data.message,         // message
