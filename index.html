@@ -44,28 +44,42 @@
 
 <body>
     <div class="app" ng-app="donweb" ng-controller="AppController as app">
-        <div id="ui-login" ng-cloak="true">
-            <h1>Donweb</h1>
-            <form ng-submit="app.login(form)">
-                <input type="text" ng-model="form.usuario" placeholder="Ingrese su usuario" /><br>
-                <input type="password" ng-model="form.password" placeholder="Ingrese su contraseña" /><br>
-                <button>Enviar</button>
-            </form>
-            <div ng-if="app.errorLogin" class="alerta error">{{app.errorLogin}}</div>
-        </div>
-        <div id="ui-inicial" ng-if="app.usuario.logueado" ng-cloak="true" style="display:none">
-            <h1>¡Bienvenido!</h1>
-            <p>Tu id de dispositivo es {{registrationID}}</p>
-        </div>
+        <div ng-if="app.cargando" class="spinner large"></div>
+        <div ng-if="!app.cargando">
+            
+            <!-- Usuario NO logueado -->
+            <div ng-if="!app.usuario.logueado" id="ui-login" ng-cloak="true">
+                <h1>Donweb</h1>
+                <form ng-submit="app.login(form)">
+                    <input type="text" ng-model="form.usuario" placeholder="Ingrese su usuario" /><br>
+                    <input type="password" ng-model="form.password" placeholder="Ingrese su contraseña" /><br>
+                    <button>Enviar</button>
+                </form>
+                <div ng-if="app.errorLogin" class="alerta error">{{app.errorLogin}}</div>
+            </div>
 
-        <p>
-            <span class="spinner" ng-if="app.parcial.cargando"></span>
-            <div ng-if="app.parcial.error" class="alerta error" ng-cloak="true">{{app.parcial.error}}</div>
-            <a ng-click="app.enviarRegID()" class="btn">Enviar RegID</a>
-            <a ng-click="app.ui = 'notificaciones'" class="btn">Ver todas mis notificaciones</a>
-        </p>
-
-        <div id="ui-notificaciones" ng-if="app.ui === 'notificaciones'"></div>
+            <!-- Usuario logueado -->
+            <div ng-if="app.usuario.logueado">
+                <div id="ui-inicial" ng-if="app.usuario.logueado" ng-cloak="true">
+                    <h1>¡Bienvenido!</h1>
+                    <p>Tu id de dispositivo es {{registrationID}}</p>
+                    <a ng-click="app.logout()" class="btn">Logout</a>
+                </div>
+                <div id="ui-notificaciones" ng-if="app.ui === 'notificaciones'">
+                    <ul>
+                        <li ng-repeat="item in app.notificaciones.items">
+                            <span>{{item}}</span>
+                        </li>
+                    </ul>
+                </div> 
+            </div>
+            <p>
+                <span class="spinner" ng-if="app.parcial.cargando"></span>
+                <div ng-if="app.parcial.error" class="alerta error" ng-cloak="true">{{app.parcial.error}}</div>
+                <a ng-click="app.enviarRegID()" class="btn">Enviar RegID</a>
+                <a ng-click="app.ui = 'notificaciones'" class="btn">Ver todas mis notificaciones</a>
+            </p>
+        </div>
     </div>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
