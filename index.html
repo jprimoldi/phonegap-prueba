@@ -39,23 +39,38 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
+    <title>Donweb for Mobile</title>
 </head>
 
 <body>
-    <div class="app">
-        <h1>PhoneGap</h1>
-        <div id="registration" class="blink">
-            <p class="event waiting">Requesting Registration ID</p>
-            <p class="event received">Registered</p>
-            <p class="event mensaje">Registration ID: </p>
+    <div class="app" ng-app="donweb" ng-controller="AppController as app">
+        <div id="ui-login" ng-cloak="true">
+            <h1>Donweb</h1>
+            <form ng-submit="app.login(form)">
+                <input type="text" ng-model="form.usuario" placeholder="Ingrese su usuario" /><br>
+                <input type="password" ng-model="form.password" placeholder="Ingrese su contraseña" /><br>
+                <button>Enviar</button>
+            </form>
+            <div ng-if="app.errorLogin" class="alerta error">{{app.errorLogin}}</div>
         </div>
+        <div id="ui-inicial" ng-if="app.usuario.logueado" ng-cloak="true" style="display:none">
+            <h1>¡Bienvenido!</h1>
+            <p>Tu id de dispositivo es {{registrationID}}</p>
+        </div>
+
+        <p>
+            <span class="spinner" ng-if="app.parcial.cargando"></span>
+            <div ng-if="app.parcial.error" class="alerta error" ng-cloak="true">{{app.parcial.error}}</div>
+            <a ng-click="app.enviarRegID()" class="btn">Enviar RegID</a>
+            <a ng-click="app.ui = 'notificaciones'" class="btn">Ver todas mis notificaciones</a>
+        </p>
+
+        <div id="ui-notificaciones" ng-if="app.ui === 'notificaciones'"></div>
     </div>
     <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/angular-cookies.min.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript">
-        app.initialize();
-    </script>
 </body>
 
 </html>
