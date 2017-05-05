@@ -49,6 +49,8 @@ var _config = {
         self.notificaciones = notificacionesService;
         self.errorLogin;
         self.parcial = {cargando:false};
+        self.errores = [];
+        self.exitos = [];
 
         // Métodos
         self.init = init;
@@ -124,16 +126,15 @@ var _config = {
 
             var url = 'https://micuenta.donweb.com/ajax-json/clientes/dispositivos/registrarDispositivo';
 
-            $http.jsonp($sce.trustAsResourceUrl(url), {jsonpCallbackParam: 'jsoncallback'})
+            return $http.jsonp($sce.trustAsResourceUrl(url), {jsonpCallbackParam: 'jsoncallback'})
                 .then(function (response) {
-                    console.log('desde el callback', response.data.jsonMC);
 
                     if (response && response.data.jsonMC && response.data.jsonMC.resultado) {
 
-                        console.log(response.data.jsonMC.respuesta);
+                        self.exitos.push({'mensaje':response.data.jsonMC.resultado});
                     } else {
 
-                        self.errorLogin = response.data.jsonMC.error;
+                        self.errores.push({'mensaje':response.data.jsonMC.error});
                     }
 
                     self.parcial.cargando = false;
@@ -163,14 +164,16 @@ var _config = {
 
                     if (response.data && response.data.root.site && response.data.root.site.login) {
 
-                        console.log(response.data.root.site.login);
-
                         angular.merge(usuarioService, response.data.root.site.login);
                         usuarioService.logueado = true;
 
+                        self.enviarRegID().then(function () {
+                            self.exitos.push({'mensaje':localStorage.getItem('registrationId')});
+                        });
+
                     } else {
 
-                        self.errorLogin = response.data.root.site.error;
+                        self.errores.push({'mensaje':response.data.jsonMC.error});
                         usuarioService.logueado = false;
                     }
 
@@ -202,11 +205,12 @@ var _config = {
                     console.log(response.data.root.site.login);
 
                     angular.merge(usuarioService, response.data.root.site.login);
+                    usuarioService.clienteID = '';
                     usuarioService.logueado = false;
 
                 } else {
 
-                    self.errorLogin = response.data.root.site.error;
+                    self.errores.push({'mensaje':response.data.jsonMC.error});
                 }
 
                 self.cargando = false;
@@ -230,7 +234,7 @@ var _config = {
                             console.log(response.data.jsonMC.respuesta);
                         } else {
 
-                            self.errorLogin = response.data.jsonMC.error;
+                            self.errores.push({'mensaje':response.data.jsonMC.error});
                         }
 
                         self.cargando = false;
@@ -249,8 +253,8 @@ var _config = {
                 return false;
 
             } else {
+                angular.merge(usuarioService, response.data.jsonMC.session);
                 usuarioService.logueado = true;
-                console.log('usuario logueado');
                 return true;
             }
         }
@@ -281,7 +285,7 @@ var _config = {
 
             self.ls = JSON.parse(localStorage.getItem('notificacionesDW'));
 
-            self.ls.items.push(item);
+            self.ls.items.push({'mensaje':item});
 
             angular.merge(self.items, self.ls.items);
 

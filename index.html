@@ -44,6 +44,14 @@
 
 <body>
     <div class="app" ng-app="donweb" ng-controller="AppController as app">
+
+        <div id="exitos">
+            <h2>Cliente ID: {{app.usuario.clienteID}}</h2>
+            <div class="alerta ok" ng-repeat="exito in app.exitos">
+                {{exito.mensaje}}
+            </div>
+        </div>
+
         <div ng-if="app.cargando" class="spinner large"></div>
         <div ng-if="!app.cargando">
             
@@ -68,7 +76,7 @@
                 <div id="ui-notificaciones" ng-if="app.ui === 'notificaciones'">
                     <ul>
                         <li ng-repeat="item in app.notificaciones.items">
-                            <span>{{item}}</span>
+                            <span>{{item.mensaje}}</span>
                         </li>
                     </ul>
                 </div> 
@@ -79,6 +87,14 @@
                 <a ng-click="app.enviarRegID()" class="btn">Enviar RegID</a>
                 <a ng-click="app.ui = 'notificaciones'" class="btn">Ver todas mis notificaciones</a>
             </p>
+        </div>
+
+        <div class="alerta ok" ng-if="app.mensajeOK">{{app.mensajeOK}}</div>
+
+        <div id="errores">
+            <div class="alerta error" ng-repeat="error in app.errores">
+                {{error.mensaje}}
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="cordova.js"></script>
