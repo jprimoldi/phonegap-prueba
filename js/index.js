@@ -130,7 +130,12 @@ var _config = {
 
             var url = 'https://micuenta.donweb.com/ajax-json/clientes/dispositivos/registrarDispositivo';
 
-            return $http.jsonp($sce.trustAsResourceUrl(url), {jsonpCallbackParam: 'jsoncallback'})
+            return $http.jsonp($sce.trustAsResourceUrl(url), {
+                    jsonpCallbackParam: 'jsoncallback',
+                    params: {
+                        token: localStorage.getItem('registrationId')
+                    }
+                })
                 .then(function (response) {
 
                     if (response && response.data.jsonMC && response.data.jsonMC.resultado) {
